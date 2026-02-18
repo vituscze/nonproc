@@ -159,3 +159,37 @@ path(X, Y) :- edge(X, Z), path(Z, Y).
 % ?- path(f, f).
 % true ;  % expected behavior because it matches the fact
 % false.  % ???
+
+/*
+Map of Europe
+
+Consider a map that shows 7 countries in central Europe: [image here: https://ksvi.mff.cuni.cz/~dingle/2025-6/npp/exercises_1/europe.png]
+
+Is it possible to color this map with 3 colors so that no bordering countries have the same color?
+
+Write a Prolog program that can answer this question.
+*/
+
+country(X) :- X = red; X = blue; X = green.
+
+map(Germany, Czechia, Poland, Austria, Slovakia, Hungary, Ukraine) :-
+    country(Germany),
+    country(Czechia),
+    country(Poland),
+    country(Austria),
+    country(Slovakia),
+    country(Hungary),
+    country(Ukraine),
+    dif(Germany, Poland),
+    dif(Germany, Czechia),
+    dif(Germany, Austria),
+    dif(Czechia, Poland),
+    dif(Czechia, Slovakia),
+    dif(Czechia, Austria),
+    dif(Austria, Slovakia),
+    dif(Austria, Hungary),
+    dif(Poland, Ukraine),
+    dif(Poland, Slovakia),
+    dif(Slovakia, Ukraine),
+    dif(Slovakia, Hungary),
+    dif(Hungary, Ukraine).
