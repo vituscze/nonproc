@@ -146,3 +146,44 @@ queens' :: Int -> [String]
 queens' n = map (toBox n) (queens n)
 -- queens' = map <$> toBox <*> queens
 -- Although we probably won't have time to cover <$> and <*>
+
+{-
+Church Numerals
+
+The lambda calculus is a theoretical programming language that contains only variables, function
+applications, and lambdas. For example, the lambda calculus term λx. λy. λf. f (x y) is equivalent
+to the Haskell expression \x -> \y -> \f -> f (x y).
+
+In the lambda calculus we may represent natural numbers using Church numerals, as follows:
+
+    0 = λf.λx.x
+
+    1 = λf.λx.f x
+
+    2 = λf.λx.f (f x)
+
+    3 = λf.λx.f (f (f x))
+
+    ...
+
+a) What are the polymorphic types of the Church numerals 0, 1, and 2? Is there some polymorphic
+type τ such that all Church numerals belong to the type τ?
+
+b) Write a Haskell function that converts a Church numeral to an Integer.
+
+c) Write a Haskell function that converts an Integer to a Church numeral.
+
+d) Write a function that adds two Church numerals. (Do not use Haskell integers in your solution.)
+
+e) Write a function that multiplies two Church numerals. (Do not use Haskell integers in your solution.)
+-}
+
+toChurch n = foldr (.) id . replicate (fromIntegral n)
+-- Strictly speaking, this will overflow the Int at some point but
+-- we'll run out of memory to store the numeral long before then.
+
+fromChurch c = c (+ 1) 0
+
+addChurch m n = \f x -> m f (n f x)
+
+mulChurch m n = \f x -> m (n f) x
