@@ -41,8 +41,7 @@ isSearchTree = go NegInf PosInf
 -- The first function checks for the lower bound, the second for the upper bound.
 --
 -- For example, the interval (a .. b) would be represented as a pair of functions
--- ((> a), (< b)). A value is within the interval if both functions evaluate return
--- True.
+-- ((> a), (< b)). A value is within the interval if both functions return True.
 isSearchTree' :: Ord a => Tree a -> Bool
 isSearchTree' = go (const True) (const True)
   where
