@@ -16,6 +16,50 @@ csort bounds vals = concatMap (uncurry (flip replicate)) (assocs arr)
     arr = accumArray (+) 0 bounds $ zip vals [1, 1..]
 
 {-
+Applicative Functor
+
+Rewrite the expression [(x, y) | x <- [1..3], y <- [1..4]] using no variables, by using the applicative functor operator <*>.
+-}
+
+expr :: [(Int, Int)]
+expr = (,) <$> [1..3] <*> [1..4]
+
+{-
+Sequence
+
+The function sequence has type
+
+sequence :: Monad m => [m a] → m [a]
+
+It combines a list of monadic values into a single monadic value. For example:
+
+> sequence [Just 4, Just 3, Just 2]
+Just [4,3,2]
+> sequence [Just 4, Nothing, Just 2]
+Nothing
+
+sequence [a, b, c] is the same as
+
+do
+  x <- a
+  y <- b
+  z <- c
+  return [x, y, z]
+
+Implement sequence.
+-}
+
+-- Available as just liftM2 in the standard library
+liftM2' :: Monad m => (a -> b -> c) -> m a -> m b -> m c
+liftM2' f ma mb = do
+    a <- ma
+    b <- mb
+    pure $ f a b
+
+sequence' :: Monad m => [m a] -> m [a]
+sequence' = foldr (liftM2 (:)) (pure [])
+
+{-
 In Haskell, we may represent a graph in adjacency-list representation using an association list that maps each vertex to a list of its neighbors:
 
 type Graph a = [(a, [a])]
@@ -175,7 +219,7 @@ Write a Haskell program that can determine the answer.
 -- Position of each person, position of the torch, time
 type BridgeState = ([Bool], Bool, Int)
 
--- Which two people are moving
+-- Which one or two people are moving
 type BridgeAction = [Bool]
 
 bridgeStateSpace :: StateSpace BridgeState BridgeAction
